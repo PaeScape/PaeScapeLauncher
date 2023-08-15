@@ -7,6 +7,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Scanner;
 
 
@@ -24,18 +26,11 @@ public class Launcher {
                     System.out.println("Updating PaeScape Client");
                     try {
                         file.getParentFile().mkdir();
-                        OutputStream out = new FileOutputStream(file);
                         URLConnection conn = new URL(Settings.CLIENT_DOWNLOAD_URL).openConnection();
-                    	conn.addRequestProperty("User-Agent", "PaeScape Launcher");
+                        conn.addRequestProperty("User-Agent", "PaeScape Launcher");
                         InputStream in = conn.getInputStream();
-                        byte[] b = new byte[1024];
-                        int len;
-                        while ((len = in.read(b, 0, b.length)) > -1) {
-                            out.write(b, 0, len);
-                        }
+                        Files.copy(in, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                        out.flush();
-                        out.close();
                         in.close();
                         try {
                             launchClient();
@@ -61,8 +56,8 @@ public class Launcher {
 
     public static boolean isLatestFile(FileInputStream localfile, String checksumEndpoint) throws URISyntaxException {
         try {
-        	URLConnection checksumEndpointConnection = new URL(checksumEndpoint).openConnection();
-        	checksumEndpointConnection.addRequestProperty("User-Agent", "PaeScape Launcher");
+            URLConnection checksumEndpointConnection = new URL(checksumEndpoint).openConnection();
+            checksumEndpointConnection.addRequestProperty("User-Agent", "PaeScape Launcher");
             try (Scanner scanner = new Scanner(checksumEndpointConnection.getInputStream(), StandardCharsets.UTF_8.toString())) {
                 scanner.useDelimiter("\\A");
                 String checksum = scanner.hasNext() ? scanner.next() : "";
