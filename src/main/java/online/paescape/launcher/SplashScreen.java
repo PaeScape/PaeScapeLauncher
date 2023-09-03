@@ -7,11 +7,12 @@ import java.awt.*;
 public class SplashScreen
         extends JWindow {
     private static final long serialVersionUID = 6812420466718945931L;
-    private static int[] dimensions = new int[]{994, 479};
+    private static final int[] dimensions = new int[]{994, 479};
+    private static JFrame frame;
 
 
     public static void showSplash() {
-        JFrame frame = new JFrame();
+        frame = new JFrame();
         frame.setUndecorated(true);
         frame.setBackground(new Color(0, 0, 0, 0));
         frame.getRootPane().setWindowDecorationStyle(0);
@@ -21,5 +22,15 @@ public class SplashScreen
         JLabel label = new JLabel(new ImageIcon(SplashScreen.class.getClassLoader().getResource("splashscreen.png")));
         frame.add(label);
         frame.setVisible(true);
+    }
+
+    public static void closeSplash() {
+        if (frame != null) {
+            frame.dispose();
+        }
+    }
+
+    public static JFrame getSplashWindow() {
+        return frame;
     }
 }
