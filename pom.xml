@@ -25,49 +25,66 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <outputDirectory>${project.build.directory}/archives/</outputDirectory>
-                    <archive>
-                        <manifestEntries>
-                            <Built-By></Built-By>
-                        </manifestEntries>
-                        <manifest>
-                            <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
-                            <mainClass>online.paescape.launcher.Launcher</mainClass>
-                        </manifest>
-                    </archive>
+                    <source/>
+                    <target/>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml
+                            </dependencyReducedPomLocation>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/maven/**</exclude>
+                                        <exclude>META-INF/LICENSE.*</exclude>
+                                        <exclude>META-INF/NOTICE.*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>online.paescape.launcher.Launcher</Main-Class>
+                                        <Build-Number>1</Build-Number>
+                                        <Built-By/>
+                                        <Archiver-Version/>
+                                        <Created-By/>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>me.ccampo</groupId>
+                <artifactId>git-version-maven-plugin</artifactId>
+                <version>0.1.0</version>
+                <extensions>true</extensions>
                 <configuration>
-                    <outputDirectory>${project.build.directory}/archives/</outputDirectory>
-                    <archive>
-                        <manifestEntries>
-                            <Built-By></Built-By>
-                        </manifestEntries>
-                        <manifest>
-                            <addDefaultImplementationEntries>false</addDefaultImplementationEntries>
-                            <mainClass>online.paescape.launcher.Launcher</mainClass>
-                        </manifest>
-                    </archive>
+                    <strategy hint="git">
+                        <nonQualifierBranches>master</nonQualifierBranches>
+                        <snapshot>false</snapshot>
+                    </strategy>
+                    <deleteTemporaryFile>true</deleteTemporaryFile>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>
