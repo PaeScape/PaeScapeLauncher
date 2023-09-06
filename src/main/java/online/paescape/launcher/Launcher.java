@@ -38,7 +38,7 @@ public class Launcher {
     }
 
     public static void setupLogging() {
-        new File(Settings.SAVE_DIR + "launcher").mkdir();
+        new File(Settings.SAVE_DIR + "launcher").mkdirs();
         try {
             logger.setLevel(Level.FINE);
             FileHandler fh = new FileHandler(Settings.SAVE_DIR + "launcher/launcher.log", true);
